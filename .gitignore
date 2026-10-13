@@ -1,0 +1,43 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build artifacts
+bin/
+obj/
+**/bin/
+**/obj/
+
+# NuGet
+*.nupkg
+packages/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# DB
+*.mdf
+*.ldf
+
+# Rider
+.idea/
+
+# Temporary
+temp/
+
+# Ignore test results
+TestResults/
+
+# Ignore node modules
+node_modules/
+
+# Ignore publish output
+publish/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
