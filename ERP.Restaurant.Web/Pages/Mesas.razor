@@ -1,0 +1,44 @@
+@page "/mesas"
+@page "/"
+@inject HttpClient Http
+
+<h3>📱 Gestión de Mesas (Tablet Meseros)</h3>
+@if (!string.IsNullOrEmpty(Error))
+{
+    <div class="alert alert-danger" role="alert">@Error</div>
+}
+<div class="row">
+    @foreach (var mesa in ListaMesas)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card @(mesa.Estado == "LIBRE" ? "bg-success" : "bg-warning") text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Mesa @mesa.Numero</h5>
+                    <p class="card-text">Estado: @mesa.Estado</p>
+                    <button class="btn btn-light btn-sm" @onclick="() => AbrirMesa(mesa.Id)">Atender</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<MesaDto> ListaMesas = new();
+    private string? Error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ListaMesas = await Http.GetFromJsonAsync<List<MesaDto>>("api/Mesas") ?? new();
+        }
+        catch (HttpRequestException)
+        {
+            Error = "No se pudieron cargar las mesas. Compruebe que la API esté disponible.";
+        }
+    }
+
+    private void AbrirMesa(int mesaId) { Console.WriteLine($"Abriendo mesa {mesaId}"); }
+
+    private sealed record MesaDto(int Id, string Numero, string Estado);
+}
