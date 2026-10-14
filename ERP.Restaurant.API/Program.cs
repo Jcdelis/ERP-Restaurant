@@ -9,12 +9,15 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Obtener Jwt:Key desde configuración o variable de entorno; si no existe, usar clave temporal para permitir arranque en tests.
-var jwtKey = builder.Configuration["Jwt:Key"] ?? Environment.GetEnvironmentVariable("Jwt__Key") ?? new string('A', 32);
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrWhiteSpace(jwtKey) || jwtKey.Length < 32)
+    throw new InvalidOperationException("Debe configurarse Jwt:Key mediante User Secrets o una variable de entorno de al menos 32 caracteres.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ERP.Restaurant.Infrastructure.Services.IEmailService, ERP.Restaurant.Infrastructure.Services.SmtpEmailService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

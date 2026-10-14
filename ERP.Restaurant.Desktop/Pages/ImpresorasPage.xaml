@@ -1,0 +1,12 @@
+<Page x:Class="ERP.Restaurant.Desktop.ImpresorasPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="🖨️ Gestión de Impresoras" FontSize="24" FontWeight="Bold" Margin="0,0,0,15"/>
+        <DataGrid Name="GridImpresoras" AutoGenerateColumns="True" Grid.Row="1" Margin="10"/>
+    </Grid>
+</Page>

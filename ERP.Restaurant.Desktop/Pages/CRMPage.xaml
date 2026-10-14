@@ -1,0 +1,22 @@
+<Page x:Class="ERP.Restaurant.Desktop.CRMPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="👥 Clientes y Fidelización" FontSize="24" FontWeight="Bold" Margin="0,0,0,15"/>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Clientes">
+                <DataGrid Name="GridClientes" AutoGenerateColumns="True" Margin="10"/>
+            </TabItem>
+            <TabItem Header="Top Clientes">
+                <DataGrid Name="GridTop" AutoGenerateColumns="True" Margin="10"/>
+            </TabItem>
+            <TabItem Header="Cumpleaños Hoy">
+                <DataGrid Name="GridCumple" AutoGenerateColumns="True" Margin="10"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

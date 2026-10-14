@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ERP.Restaurant.MenuDigital": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:2422;http://localhost:2423"
+    }
+  }
+}

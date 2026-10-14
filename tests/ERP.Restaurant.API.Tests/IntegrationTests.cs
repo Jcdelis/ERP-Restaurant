@@ -4,34 +4,63 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using ERP.Restaurant.Infrastructure.Data;
-using ERP.Restaurant.API.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Restaurant.API.Tests;
 
-public class IntegrationTests
+public class IntegrationTests : IClassFixture<TestFixture>
 {
-    [Fact]
-    public async Task MesasController_Get_ReturnsList()
+    private readonly TestFixture _fixture;
+
+    public IntegrationTests(TestFixture fixture)
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb_Mesas")
-            .Options;
+        _fixture = fixture;
+    }
 
-        using var context = new AppDbContext(options);
-        context.Mesas.Add(new ERP.Restaurant.Core.Entities.Mesa { Id = 1, Numero = "1", Estado = "LIBRE" });
-        context.Mesas.Add(new ERP.Restaurant.Core.Entities.Mesa { Id = 2, Numero = "2", Estado = "OCUPADA" });
-        await context.SaveChangesAsync();
+    [Fact]
+    public async Task MesasEndpoint_Host_ReturnsOk()
+    {
+        using var factory = _fixture.Factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                // Replace real DB with InMemory
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+                if (descriptor != null) services.Remove(descriptor);
+                services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TestDb_Mesas_Host"));
+            });
+        });
 
-        var controller = new MesasController(context);
-        var result = await controller.Get();
+        using var client = factory.CreateClient();
 
-        result.Should().BeOfType<OkObjectResult>();
-        var ok = result as OkObjectResult;
-        ok!.Value.Should().BeAssignableTo<System.Collections.IEnumerable>();
+        // Add Authorization header with valid JWT token
+        var token = _fixture.GenerateTestToken("ADMIN", "test@example.com");
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+        var resp = await client.GetAsync("/api/Mesas");
+        resp.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ProductosEndpoint_Host_ReturnsOk()
+    {
+        using var factory = _fixture.Factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+                if (descriptor != null) services.Remove(descriptor);
+                services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TestDb_Productos_Host"));
+            });
+        });
+
+        using var client = factory.CreateClient();
+        var resp = await client.GetAsync("/api/Productos");
+        resp.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
     }
 }

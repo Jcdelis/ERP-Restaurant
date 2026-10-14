@@ -1,0 +1,38 @@
+<Window x:Class="ERP.Restaurant.Desktop.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="ERP Restaurant - Iniciar Sesión" 
+        Height="450" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid Background="{DynamicResource MaterialDesignPaper}">
+        <StackPanel VerticalAlignment="Center" Margin="40">
+            <TextBlock Text="🍽️ ERP Restaurant" 
+                       FontSize="28" FontWeight="Bold" 
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                       Margin="0,0,0,30"/>
+            
+            <TextBox x:Name="TxtEmail" 
+                     materialDesign:HintAssist.Hint="Email"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Margin="0,0,0,20" Height="50"/>
+            
+            <PasswordBox x:Name="TxtPassword"
+                         materialDesign:HintAssist.Hint="Contraseña"
+                         Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                         Margin="0,0,0,20" Height="50"/>
+            
+            <Button x:Name="BtnLogin" Content="INICIAR SESIÓN" 
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Height="45" Margin="0,0,0,10"
+                    Click="BtnLogin_Click"/>
+            
+            <TextBlock x:Name="TxtError" 
+                       Foreground="Red" 
+                       HorizontalAlignment="Center"
+                       Margin="0,10,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>

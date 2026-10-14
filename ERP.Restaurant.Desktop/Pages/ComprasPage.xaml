@@ -1,0 +1,19 @@
+<Page x:Class="ERP.Restaurant.Desktop.ComprasPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="📦 Módulo de Compras" FontSize="24" FontWeight="Bold" Margin="0,0,0,15"/>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Proveedores">
+                <DataGrid Name="GridProveedores" AutoGenerateColumns="True" Margin="10"/>
+            </TabItem>
+            <TabItem Header="Cuentas por Pagar">
+                <DataGrid Name="GridCuentas" AutoGenerateColumns="True" Margin="10"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

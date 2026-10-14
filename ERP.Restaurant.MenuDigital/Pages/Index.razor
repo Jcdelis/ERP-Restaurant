@@ -1,0 +1,70 @@
+@page "/"
+@inject NavigationManager Nav
+@inject HttpClient Http
+@using System.Collections.Generic
+
+<h2>🍽️ Menú Digital - Mesa @MesaId</h2>
+
+<div class="list-group">
+    @if (Platos != null)
+    {
+        @foreach (var plato in Platos)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">@plato.Nombre</h5>
+                    <small>@plato.Tipo</small>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-primary rounded-pill">S/ @plato.PrecioVenta</span>
+                    <button class="btn btn-sm btn-success mt-2 ms-2" @onclick="() => Pedir(plato.Id)">Pedir</button>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private string MesaId = "1";
+    private List<ProductoViewModel> Platos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var uri = Nav.ToAbsoluteUri("api/Productos?tipo=PLATO");
+            Platos = await Http.GetFromJsonAsync<List<ProductoViewModel>>(uri) ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    private async Task Pedir(int productoId)
+    {
+        try
+        {
+            await Http.PostAsJsonAsync("api/POS/ventas", new 
+            { 
+                MesaId = int.Parse(MesaId), 
+                MeseroId = 0, 
+                Moneda = "PEN", 
+                TipoCambio = 1 
+            });
+            Console.WriteLine($"Producto {productoId} pedido desde mesa {MesaId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al pedir: {ex.Message}");
+        }
+    }
+
+    public class ProductoViewModel
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = "";
+        public string Tipo { get; set; } = "";
+        public decimal PrecioVenta { get; set; }
+    }
+}
